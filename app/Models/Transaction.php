@@ -13,6 +13,9 @@ class Transaction extends Model
         'user_id',
         'coin_id',
         'price',
+        'price_change_percentage_1h',
+        'price_change_percentage_24h',
+        'price_change_percentage_7d',
         'amount',
     ];
 }

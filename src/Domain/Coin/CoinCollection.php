@@ -16,3 +16,4 @@ class CoinCollection
         $this->list[] = $coin;
     }
 }
+
