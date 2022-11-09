@@ -1,6 +1,7 @@
 <?php
 
 use App\Http\Controllers\CoinController;
+use App\Http\Controllers\TransactionController;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 
@@ -21,4 +22,12 @@ Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
 
 Route::prefix('coins')->group(function () {
     Route::get('/list', [CoinController::class, 'getCoins']);
+});
+
+Route::prefix('transactions')->group(function () {
+    Route::post('/{coinGeckoId}', [TransactionController::class, 'createTransaction']);
+});
+
+Route::prefix('balances')->group(function () {
+    Route::get('/', [TransactionController::class, 'getBalance']);
 });

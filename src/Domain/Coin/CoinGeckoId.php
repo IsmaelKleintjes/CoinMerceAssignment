@@ -5,7 +5,7 @@ namespace Src\Domain\Coin;
 class CoinGeckoId
 {
     public function __construct(
-        public string $string,
+        public string $id,
     )
     {}
 }
