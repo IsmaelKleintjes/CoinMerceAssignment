@@ -20,9 +20,9 @@
         <tr>
             <td>{{ $balance->coin->name }}</td>
             <td>{{ $balance->totalCryptoAmount }}</td>
-            <td>{{ $balance->currentValue }}</td>
-            <td>{{ $balance->gainLoss }}</td>
-            <td>{{ $balance->percentageDifference }}</td>
+            <td>€ {{ $balance->currentValue }}</td>
+            <td>€ {{ $balance->gainLoss }}</td>
+            <td>{{ $balance->percentageDifference }} %</td>
         </tr>
 
     @endforeach
