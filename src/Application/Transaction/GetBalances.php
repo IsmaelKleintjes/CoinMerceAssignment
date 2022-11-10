@@ -28,17 +28,17 @@ class GetBalances implements Command
             $coinsList .=  $coin->coinGeckoId->id.',';
         }
 
+        $coinInfoCollection = $coinGeckoRepository->fetchCoins($coinsList);
+
         $collection = new BalanceCollection();
 
         foreach ($coins->list as $coin) {
-
-            $coinInfoCollection = $coinGeckoRepository->fetchCoins($coinsList);
 
             $currentPrice = $this->getCurrentPrice($coinInfoCollection, $coin);
 
             $balanceCoin = $transactionRepository->calculateBalance($coin, $this->userId, new Price($currentPrice));
 
-            if($balanceCoin){
+            if ($balanceCoin) {
                 $collection->addObject($balanceCoin);
             }
         }

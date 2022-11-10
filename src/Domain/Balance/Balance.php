@@ -10,6 +10,7 @@ class Balance
     public function __construct(
         public readonly Coin $coin,
         public readonly string $totalCryptoAmount,
+        public readonly string $currentValue,
         public readonly string $gainLoss,
         public readonly string $percentageDifference,
     ){

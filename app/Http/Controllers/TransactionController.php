@@ -3,6 +3,8 @@
 namespace App\Http\Controllers;
 
 use App\Http\Requests\CreateTransactionRequest;
+use Illuminate\Support\Facades\Auth;
+//use PHPUnit\Framework\Constraint\IsEmpty as Empty;
 use Src\Application\CoinGecko\GetCoins;
 use Src\Application\Transaction\CreateTransaction;
 use Src\Application\Transaction\GetBalances;
@@ -14,21 +16,17 @@ class TransactionController extends Controller
 {
     public function showBalances()
     {
-        $userId = new UserId('1');
+        $userId = new UserId(Auth::user()->id);
 
         $balances = dispatch_sync(new GetBalances($userId));
 
         return view('Balances.show', [
-            'balances' => $balances->list
+            'balances' => $balances
         ]);
     }
 
     public function createTransaction($request)
     {
-        $userId = new UserId('1');
-
-        $balances = dispatch_sync(new GetCoins());
-
         return view('transactions.create', [
             'coin' => $request
         ]);
@@ -36,10 +34,8 @@ class TransactionController extends Controller
 
     public function storeTransaction(CreateTransactionRequest $request)
     {
-        $userId = 1;
-
         $transaction = new TransactionRequest(
-            userId: new UserId($userId),
+            userId: new UserId(Auth::user()->id),
             coinGeckoId: new CoinGeckoId($request->coin),
             amount: $request->amount,
             type: $request->type,
@@ -47,12 +43,14 @@ class TransactionController extends Controller
 
         $newTransaction = dispatch_sync(new CreateTransaction($transaction));
 
-        return json_encode($newTransaction);
+        return view('transactions.show', [
+            'transaction' => $newTransaction
+        ]);
     }
 
     public function getBalances()
     {
-        $userId = new UserId('1');
+        $userId = new UserId(Auth::user()->id);
 
         $balances = dispatch_sync(new GetBalances($userId));
 

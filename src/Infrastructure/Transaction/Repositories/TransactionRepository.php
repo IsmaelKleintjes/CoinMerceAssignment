@@ -65,8 +65,9 @@ final class TransactionRepository implements TransactionRepositoryContract
                 symbol: $coin->symbol
             ),
             totalCryptoAmount: $transaction->sum('amount'),
+            currentValue: $worthNow,
             gainLoss: $worthNow - $totalPayed,
-            percentageDifference: (100 / $totalPayed * $worthNow) - 100
+            percentageDifference: ($worthNow - $totalPayed) / $totalPayed * 100,
         );
     }
 }

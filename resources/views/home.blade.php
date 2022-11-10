@@ -15,9 +15,15 @@
                     @endif
 
                     {{ __('You are logged in!') }}
+
+                    <br>
+                    <a href="/coins">Show coins</a><br>
+                    <a href="/balances">Show balances</a>
                 </div>
             </div>
         </div>
     </div>
 </div>
+
+
 @endsection
