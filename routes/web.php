@@ -1,5 +1,8 @@
 <?php
 
+use App\Http\Controllers\CoinController;
+use App\Http\Controllers\TransactionController;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Route;
 
 /*
@@ -13,6 +16,11 @@ use Illuminate\Support\Facades\Route;
 |
 */
 
-Route::get('/', function () {
-    return view('welcome');
-});
+Route::get('/', function () {return view('welcome');});
+Route::get('coins/list', [CoinController::class, 'getCoins']);
+Route::post('transactions/{coinGeckoId}', [TransactionController::class, 'createTransaction']);
+Route::get('balances', [TransactionController::class, 'getBalances']);
+
+Auth::routes();
+
+Route::get('/home', [App\Http\Controllers\HomeController::class, 'index'])->name('home');

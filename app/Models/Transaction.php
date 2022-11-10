@@ -4,6 +4,7 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Relations\BelongsTo;
 
 class Transaction extends Model
 {
@@ -12,10 +13,18 @@ class Transaction extends Model
     protected $fillable = [
         'user_id',
         'coin_id',
-        'price',
-        'price_change_percentage_1h',
-        'price_change_percentage_24h',
-        'price_change_percentage_7d',
         'amount',
+        'price',
+        'type',
     ];
+
+    public function user(): BelongsTo
+    {
+        return $this->belongsTo(User::class);
+    }
+
+    public function coin(): BelongsTo
+    {
+        return $this->belongsTo(Coin::class);
+    }
 }

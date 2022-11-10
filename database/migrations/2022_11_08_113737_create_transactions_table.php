@@ -15,13 +15,11 @@ return new class extends Migration
     {
         Schema::create('transactions', function (Blueprint $table) {
             $table->id();
-            $table->integer('user_id');
-            $table->string('coin_id');
+            $table->foreignId('user_id')->constrained('users');
+            $table->foreignId('coin_id')->constrained('coins');
             $table->decimal('price', 50);
             $table->decimal('amount', 50);
-            $table->decimal('price_change_percentage_1h', 50);
-            $table->decimal('price_change_percentage_24h', 50);
-            $table->decimal('price_change_percentage_7d', 50);
+            $table->string('type');
             $table->timestamps();
         });
     }

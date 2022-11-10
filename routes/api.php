@@ -20,14 +20,7 @@ Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
     return $request->user();
 });
 
-Route::prefix('coins')->group(function () {
-    Route::get('/list', [CoinController::class, 'getCoins']);
-});
+Route::get('coins', [CoinController::class, 'getCoins']);
+Route::post('transactions', [TransactionController::class, 'createTransaction']);
+Route::get('balances', [TransactionController::class, 'getBalances']);
 
-Route::prefix('transactions')->group(function () {
-    Route::post('/{coinGeckoId}', [TransactionController::class, 'createTransaction']);
-});
-
-Route::prefix('balances')->group(function () {
-    Route::get('/', [TransactionController::class, 'getBalance']);
-});

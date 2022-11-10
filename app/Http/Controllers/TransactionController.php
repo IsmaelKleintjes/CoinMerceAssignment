@@ -2,20 +2,37 @@
 
 namespace App\Http\Controllers;
 
-use Src\Application\Transaction\createTransactionById;
-use Src\Application\Transaction\getBalance;
+use App\Http\Requests\CreateTransactionRequest;
+use Src\Application\Transaction\CreateTransaction;
+use Src\Application\Transaction\GetBalances;
 use Src\Domain\Coin\CoinGeckoId;
+use Src\Domain\Transaction\TransactionRequest;
+use Src\Domain\User\UserId;
 
 class TransactionController extends Controller
 {
-    public function createTransaction($request)
+    public function createTransaction(CreateTransactionRequest $request)
     {
-        $value = '00000.1';
-        return json_encode(dispatch_sync(new createTransactionById(new CoinGeckoId($request), $value)));
+        $userId = 1;
+
+        $transaction = new TransactionRequest(
+            userId: new UserId($userId),
+            coinGeckoId: new CoinGeckoId($request->coin),
+            amount: $request->amount,
+            type: $request->type,
+        );
+
+        $newTransaction = dispatch_sync(new CreateTransaction($transaction));
+
+        return json_encode($newTransaction);
     }
 
-    public function getBalance()
+    public function getBalances()
     {
-        return json_encode(dispatch_sync(new getBalance()));
+        $userId = new UserId('1');
+
+        $balances = dispatch_sync(new GetBalances($userId));
+
+        return json_encode($balances);
     }
 }

@@ -3,10 +3,13 @@ namespace Src\Infrastructure\Transaction\Repositories;
 
 use Src\Application\Transaction\Contracts\TransactionRepository as TransactionRepositoryContract;
 use App\Models\Transaction as TransactionEloquent;
+use App\Models\Coin as CoinEloquent;
+use Src\Domain\Balance\Balance;
 use Src\Domain\Coin\Coin;
+use Src\Domain\Coin\CoinEntity;
 use Src\Domain\Coin\CoinGeckoId;
+use Src\Domain\Transaction\Price;
 use Src\Domain\Transaction\Transaction;
-use Src\Domain\Transaction\TransactionEntityCollection;
 use Src\Domain\Transaction\TransactionEntity;
 use Src\Domain\Transaction\TransactionId;
 use Src\Domain\User\UserId;
@@ -15,49 +18,55 @@ final class TransactionRepository implements TransactionRepositoryContract
 {
     public function persist(Transaction $transactionInfo): TransactionEntity
     {
+        $coin = CoinEloquent::where('coingecko_id', $transactionInfo->coin->coinGeckoId->id)->first();
+
         $transaction = TransactionEloquent::create(
             [
                 'user_id' => $transactionInfo->userId->id,
-                'coin_id' => $transactionInfo->coin->coinGeckoId->id,
-                'price' => $transactionInfo->coin->current_price,
-                'price_change_percentage_1h' => $transactionInfo->coin->price_change_percentage_1h,
-                'price_change_percentage_24h' => $transactionInfo->coin->price_change_percentage_7d,
-                'price_change_percentage_7d' => $transactionInfo->coin->price_change_percentage_24h,
-                'amount' => $transactionInfo->amount
+                'coin_id' => $coin->id,
+                'price' => $transactionInfo->price,
+                'amount' => $transactionInfo->amount,
+                'type' => $transactionInfo->type
             ]
         );
 
         return new TransactionEntity(
             transactionId: new TransactionId($transaction->id),
             userId: new UserId($transaction->user_id),
-            coin: $transactionInfo->coin,
+            coin: new Coin(
+                coinGeckoId: new CoinGeckoId($coin->coingecko_id),
+                name: $coin->name,
+                symbol: $coin->symbol,
+            ),
             amount: $transaction->amount,
+            price: $transaction->price,
+            type: $transaction->type,
         );
     }
 
-    public function fetchAll(): TransactionEntityCollection
+    public function calculateBalance(CoinEntity $coin, UserId $userId, Price $price): ?Balance
     {
-        $transactions = TransactionEloquent::where('user_id','1')->get();
+        $transaction = TransactionEloquent::with('coin')
+            ->where(['user_id' => $userId->id, 'coin_id' => $coin->id->id])
+            ->get();
 
-        $TransactioEntityCollection = new TransactionEntityCollection();
+        if($transaction->isEmpty()){
+            return null;
+        }
 
-        $transactions->map(function ($transaction) use ($TransactioEntityCollection) {
-            $transactionEntity = new TransactionEntity(
-                transactionId: new TransactionId($transaction->id),
-                userId: new UserId($transaction->user_id),
-                coin: new Coin(
-                    coinGeckoId: new CoinGeckoId($transaction->coin_id),
-                    current_price: $transaction->price,
-                    price_change_percentage_1h: $transaction->price_change_percentage_1h,
-                    price_change_percentage_24h: $transaction->price_change_percentage_24h,
-                    price_change_percentage_7d: $transaction->price_change_percentage_7d,
-                ),
-                amount: $transaction->amount,
-            );
+        $averagePrice = $transaction->sum('price') / $transaction->count();
+        $totalPayed = $transaction->sum('amount') * $averagePrice;
+        $worthNow = $transaction->sum('amount') * $price->amount;
 
-            $TransactioEntityCollection->addObject($transactionEntity);
-        });
-
-        return $TransactioEntityCollection;
+        return new Balance(
+            coin: new Coin(
+                coinGeckoId: $coin->coinGeckoId,
+                name: $coin->name,
+                symbol: $coin->symbol
+            ),
+            totalCryptoAmount: $transaction->sum('amount'),
+            gainLoss: $worthNow - $totalPayed,
+            percentageDifference: (100 / $totalPayed * $worthNow) - 100
+        );
     }
 }

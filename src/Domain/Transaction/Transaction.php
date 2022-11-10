@@ -8,9 +8,11 @@ use Src\Domain\User\UserId;
 class Transaction
 {
     public function __construct(
-        public userId $userId,
-        public Coin $coin,
-        public float $amount,
-    )
-    {}
+        public readonly UserId $userId,
+        public readonly Coin $coin,
+        public readonly float $amount,
+        public readonly string $type,
+        public readonly float $price,
+    ){
+    }
 }
