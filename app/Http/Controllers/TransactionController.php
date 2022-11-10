@@ -4,8 +4,6 @@ namespace App\Http\Controllers;
 
 use App\Http\Requests\CreateTransactionRequest;
 use Illuminate\Support\Facades\Auth;
-//use PHPUnit\Framework\Constraint\IsEmpty as Empty;
-use Src\Application\CoinGecko\GetCoins;
 use Src\Application\Transaction\CreateTransaction;
 use Src\Application\Transaction\GetBalances;
 use Src\Domain\Coin\CoinGeckoId;
