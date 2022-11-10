@@ -3,14 +3,14 @@
 namespace Src\Application\Transaction;
 
 use Src\Application\Coin\Contracts\CoinRepository;
-use Src\Application\Contracts\Command;
 use Src\Application\CoinGecko\Contracts\CoinGeckoRepository;
+use Src\Application\Contracts\Query;
 use Src\Application\Transaction\Contracts\TransactionRepository;
 use Src\Domain\Balance\BalanceCollection;
 use Src\Domain\Transaction\Price;
 use Src\Domain\User\UserId;
 
-class GetBalances implements Command
+class GetBalances implements Query
 {
     public function __construct(private readonly UserId $userId){
     }

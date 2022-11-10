@@ -3,11 +3,11 @@
 namespace Src\Application\CoinGecko;
 
 use Src\Application\Coin\Contracts\CoinRepository;
-use Src\Application\Contracts\Command;
 use Src\Application\CoinGecko\Contracts\CoinGeckoRepository;
+use Src\Application\Contracts\Query;
 use Src\Domain\Coin\CoinInfoCollection;
 
-class GetCoins implements Command
+class GetCoins implements Query
 {
     public function __construct(){
     }

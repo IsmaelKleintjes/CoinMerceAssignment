@@ -6,7 +6,6 @@ use Src\Application\Contracts\Command;
 use Src\Application\CoinGecko\Contracts\CoinGeckoRepository;
 use Src\Application\Transaction\Contracts\TransactionRepository;
 use Src\Domain\Coin\Coin;
-use Src\Domain\Coin\CoinGeckoId;
 use Src\Domain\Transaction\Transaction;
 use Src\Domain\Transaction\TransactionEntity;
 use Src\Domain\Transaction\TransactionRequest;
