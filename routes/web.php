@@ -17,9 +17,10 @@ use Illuminate\Support\Facades\Route;
 */
 
 Route::get('/', function () {return view('welcome');});
-Route::get('coins/list', [CoinController::class, 'getCoins']);
-Route::post('transactions/{coinGeckoId}', [TransactionController::class, 'createTransaction']);
-Route::get('balances', [TransactionController::class, 'getBalances']);
+Route::get('coins', [CoinController::class, 'showCoins']);
+Route::get('transactions/{coinGeckoId}', [TransactionController::class, 'createTransaction']);
+Route::post('transactions', [TransactionController::class, 'storeTransaction']);
+Route::get('balances', [TransactionController::class, 'showBalances']);
 
 Auth::routes();
 

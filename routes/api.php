@@ -21,6 +21,6 @@ Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
 });
 
 Route::get('coins', [CoinController::class, 'getCoins']);
-Route::post('transactions', [TransactionController::class, 'createTransaction']);
+Route::post('transactions', [TransactionController::class, 'storeTransaction']);
 Route::get('balances', [TransactionController::class, 'getBalances']);
 

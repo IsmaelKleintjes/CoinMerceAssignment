@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Http\Requests\CreateTransactionRequest;
+use Src\Application\CoinGecko\GetCoins;
 use Src\Application\Transaction\CreateTransaction;
 use Src\Application\Transaction\GetBalances;
 use Src\Domain\Coin\CoinGeckoId;
@@ -11,7 +12,29 @@ use Src\Domain\User\UserId;
 
 class TransactionController extends Controller
 {
-    public function createTransaction(CreateTransactionRequest $request)
+    public function showBalances()
+    {
+        $userId = new UserId('1');
+
+        $balances = dispatch_sync(new GetBalances($userId));
+
+        return view('Balances.show', [
+            'balances' => $balances->list
+        ]);
+    }
+
+    public function createTransaction($request)
+    {
+        $userId = new UserId('1');
+
+        $balances = dispatch_sync(new GetCoins());
+
+        return view('transactions.create', [
+            'coin' => $request
+        ]);
+    }
+
+    public function storeTransaction(CreateTransactionRequest $request)
     {
         $userId = 1;
 

@@ -15,9 +15,10 @@
                         @csrf
                         <div class="row">
                             <div class="control-group col-12">
-                                <label for="title">Create Transaction</label>
-                                <input type="text" id="amount" class="form-control" name="title"
-                                       placeholder="Amount" required>
+                                <label for="title">{{ $coin }}</label>
+                                <input type="hidden" id="coin" class="form-control" name="coin" value="{{ $coin }}" required>
+                                <input type="text" id="amount" class="form-control" name="amount"placeholder="Amount" required>
+                                <input type="hidden" id="type" class="form-control" name="type" value="buy" required>
                             </div>
                         </div>
                         <div class="row mt-2">
